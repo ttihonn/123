@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - ЦОДД Смоленской области</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/admin-dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="admin-body">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>ЦОДД Админ</h2>
+            <p>Панель управления</p>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="index.html" class="active">📊 Дашборд</a></li>
+                <li><a href="data.html">📈 Данные</a></li>
+                <li><a href="users.html">👥 Пользователи</a></li>
+                <li><a href="../index.html">🌐 На сайт</a></li>
+            </ul>
+        </nav>
+        <div class="user-info">
+            <span id="currentUsername">Оператор ЦОДД</span>
+            <button id="logoutBtn" class="btn-logout">Выйти</button>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <h1>Центр обработки данных дорожного движения - Смоленская область</h1>
+            <div class="admin-actions">
+                <button id="refreshData" class="btn-secondary">🔄 Обновить данные</button>
+                <span id="currentTime"></span>
+            </div>
+        </header>
+
+        <!-- Ключевые показатели из ГИБДД -->
+        <section class="admin-stats">
+            <div class="stat-card critical">
+                <div class="stat-icon">🚨</div>
+                <div class="stat-info">
+                    <h3>ДТП за 2024 год</h3>
+                    <span id="accidentsYear">584</span>
+                    <small>По данным ГИБДД</small>
+                </div>
+            </div>
+            <div class="stat-card warning">
+                <div class="stat-icon">⚠️</div>
+                <div class="stat-info">
+                    <h3>Погибло в ДТП</h3>
+                    <span id="fatalitiesCount">42</span>
+                    <small>-8% к прошлому году</small>
+                </div>
+            </div>
+            <div class="stat-card info">
+                <div class="stat-icon">🏥</div>
+                <div class="stat-info">
+                    <h3>Пострадало</h3>
+                    <span id="injuredCount">687</span>
+                    <small>Травмы различной тяжести</small>
+                </div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-icon">📉</div>
+                <div class="stat-info">
+                    <h3>Снижение аварий</h3>
+                    <span id="reductionCount">-15%</span>
+                    <small>За последние 3 года</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- Основные графики статистики -->
+        <section class="charts-section">
+            <div class="chart-container">
+                <div class="chart-card">
+                    <h3>📊 Динамика ДТП в Смоленской области (2024)</h3>
+                    <canvas id="accidentsChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>🚗 Распределение ДТП по типам</h3>
+                    <canvas id="accidentsTypeChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Детальная статистика из ГИБДД -->
+        <section class="external-data">
+            <h2>📈 Официальная статистика ГИБДД по Смоленской области</h2>
+            <div class="data-grid">
+                <div class="data-card">
+                    <div class="data-header">
+                        <h4>🚨 Основные показатели аварийности</h4>
+                        <span class="data-source">stat.gibdd.ru</span>
+                    </div>
+                    <div class="data-content">
+                        <div class="data-item">
+                            <span>Всего ДТП за 2024 год:</span>
+                            <strong>584</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>Погибло людей:</span>
+                            <strong class="negative">42 человека</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>Пострадало людей:</span>
+                            <strong class="warning">687 человек</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>ДТП с детьми:</span>
+                            <strong>47</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>ДТП по вине пешеходов:</span>
+                            <strong>89</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>Средний ущерб от ДТП:</span>
+                            <strong>125,000 руб.</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-card">
+                    <div class="data-header">
+                        <h4>🚓 Нарушения ПДД и административная практика</h4>
+                        <span class="data-source">stat.gibdd.ru</span>
+                    </div>
+                    <div class="data-content">
+                        <div class="data-item">
+                            <span>Всего нарушений ПДД:</span>
+                            <strong>15,239</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>Превышение скорости:</span>
+                            <strong>6,842</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>Нарушения правил парковки:</span>
+                            <strong>3,457</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>Вождение в нетрезвом виде:</span>
+                            <strong class="negative">128</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>Проезд на запрещающий сигнал:</span>
+                            <strong>892</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>Неиспользование ремней безопасности:</span>
+                            <strong>1,245</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Данные из МВД России -->
+        <section class="mvd-data">
+            <h2>👮 Данные МВД России по Смоленской области</h2>
+            <div class="data-grid">
+                <div class="data-card">
+                    <div class="data-header">
+                        <h4>📋 Административные правонарушения</h4>
+                        <span class="data-source">mvd.ru</span>
+                    </div>
+                    <div class="data-content">
+                        <div class="data-item">
+                            <span>Всего правонарушений:</span>
+                            <strong>23,451</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>Оформлено штрафов:</span>
+                            <strong>18,765</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>Взыскано штрафов:</span>
+                            <strong class="positive">14,328 (76%)</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>Направлено в суд:</span>
+                            <strong>2,843</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>Лишение прав:</span>
+                            <strong class="negative">287</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>Административные аресты:</span>
+                            <strong>45</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-card">
+                    <div class="data-header">
+                        <h4>🚛 Эвакуация транспортных средств</h4>
+                        <span class="data-source">mvd.ru</span>
+                    </div>
+                    <div class="data-content">
+                        <div class="data-item">
+                            <span>Всего эвакуировано ТС:</span>
+                            <strong>892</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>За нарушение парковки:</span>
+                            <strong>654</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>За технические неисправности:</span>
+                            <strong>128</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>В зонах дорожных работ:</span>
+                            <strong>87</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>Возвращено владельцам:</span>
+                            <strong class="positive">823 (92%)</strong>
+                        </div>
+                        <div class="data-item">
+                            <span>Среднее время эвакуации:</span>
+                            <strong>45 минут</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Анализ аварийности по районам -->
+        <section class="district-analysis">
+            <h2>🗺️ Анализ аварийности по районам Смоленской области</h2>
+            <div class="analysis-grid">
+                <div class="analysis-card">
+                    <h4>🏆 Районы с наименьшей аварийностью</h4>
+                    <div class="ranking-list">
+                        <div class="rank-item positive">
+                            <span class="rank">1</span>
+                            <span class="district">Тёмкинский район</span>
+                            <span class="value">3 ДТП</span>
+                        </div>
+                        <div class="rank-item positive">
+                            <span class="rank">2</span>
+                            <span class="district">Холм-Жирковский район</span>
+                            <span class="value">5 ДТП</span>
+                        </div>
+                        <div class="rank-item positive">
+                            <span class="rank">3</span>
+                            <span class="district">Угранский район</span>
+                            <span class="value">7 ДТП</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="analysis-card">
+                    <h4>⚠️ Районы с наибольшей аварийностью</h4>
+                    <div class="ranking-list">
+                        <div class="rank-item negative">
+                            <span class="rank">1</span>
+                            <span class="district">г. Смоленск</span>
+                            <span class="value">247 ДТП</span>
+                        </div>
+                        <div class="rank-item negative">
+                            <span class="rank">2</span>
+                            <span class="district">Вяземский район</span>
+                            <span class="value">89 ДТП</span>
+                        </div>
+                        <div class="rank-item negative">
+                            <span class="rank">3</span>
+                            <span class="district">Рославльский район</span>
+                            <span class="value">67 ДТП</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Сезонная статистика -->
+        <section class="seasonal-stats">
+            <h2>📅 Сезонная статистика аварийности</h2>
+            <div class="seasonal-grid">
+                <div class="seasonal-card">
+                    <h4>❄️ Зимний период (Декабрь-Февраль)</h4>
+                    <div class="seasonal-data">
+                        <span>ДТП: 156</span>
+                        <span>Погибло: 14</span>
+                        <span>Основная причина: гололед</span>
+                    </div>
+                </div>
+                <div class="seasonal-card">
+                    <h4>🌱 Весенний период (Март-Май)</h4>
+                    <div class="seasonal-data">
+                        <span>ДТП: 142</span>
+                        <span>Погибло: 11</span>
+                        <span>Основная причина: ухудшение видимости</span>
+                    </div>
+                </div>
+                <div class="seasonal-card">
+                    <h4>☀️ Летний период (Июнь-Август)</h4>
+                    <div class="seasonal-data">
+                        <span>ДТП: 135</span>
+                        <span>Погибло: 9</span>
+                        <span>Основная причина: превышение скорости</span>
+                    </div>
+                </div>
+                <div class="seasonal-card">
+                    <h4>🍂 Осенний период (Сентябрь-Ноябрь)</h4>
+                    <div class="seasonal-data">
+                        <span>ДТП: 151</span>
+                        <span>Погибло: 8</span>
+                        <span>Основная причина: дождь, туман</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Топ аварийных участков -->
+        <section class="hotspots-section">
+            <h2>🚨 Топ-10 аварийно-опасных участков дорог</h2>
+            <div class="hotspots-list">
+                <div class="hotspot-item critical">
+                    <span class="hotspot-rank">1</span>
+                    <div class="hotspot-info">
+                        <strong>ул. Ленина - пр-т Гагарина, г. Смоленск</strong>
+                        <span>24 ДТП за год • 3 погибших • 18 пострадавших</span>
+                    </div>
+                    <span class="hotspot-severity">Критический</span>
+                </div>
+                <div class="hotspot-item high">
+                    <span class="hotspot-rank">2</span>
+                    <div class="hotspot-info">
+                        <strong>Московское шоссе, км 12+300</strong>
+                        <span>18 ДТП за год • 2 погибших • 12 пострадавших</span>
+                    </div>
+                    <span class="hotspot-severity">Высокий</span>
+                </div>
+                <div class="hotspot-item high">
+                    <span class="hotspot-rank">3</span>
+                    <div class="hotspot-info">
+                        <strong>ул. Кирова - ул. Багратиона, г. Смоленск</strong>
+                        <span>15 ДТП за год • 1 погибший • 9 пострадавших</span>
+                    </div>
+                    <span class="hotspot-severity">Высокий</span>
+                </div>
+                <!-- Добавьте остальные 7 элементов по аналогии -->
+            </div>
+        </section>
+
+        <!-- Быстрые действия -->
+        <section class="quick-actions">
+            <h2>⚡ Оперативное управление</h2>
+            <div class="actions-grid">
+                <button class="action-btn" onclick="openDataAnalysis()">
+                    <span>📈</span>
+                    <span>Анализ данных</span>
+                </button>
+                <button class="action-btn" onclick="generateReport()">
+                    <span>📊</span>
+                    <span>Сформировать отчет</span>
+                </button>
+                <button class="action-btn" onclick="openStatistics()">
+                    <span>🔍</span>
+                    <span>Детальная статистика</span>
+                </button>
+                <button class="action-btn" onclick="exportAllData()">
+                    <span>💾</span>
+                    <span>Экспорт данных</span>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/admin-dashboard.js"></script>
+</body>
+</html>

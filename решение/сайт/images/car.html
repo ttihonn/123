@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дорожный патруль - ЦОДД Смоленской области</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preload" href="js/app.js" as="script">
+    <style>
+        /* Стили как в index.html */
+        .stats-preview .stat-badge {
+            color: white !important;
+        }
+        
+        .stats-preview .stat-icon i {
+            color: white !important;
+        }
+        
+        .stats-preview .stat-value {
+            color: white !important;
+        }
+        
+        .stats-preview .stat-label {
+            color: white !important;
+        }
+        
+        .hero-visual {
+            background: transparent !important;
+        }
+        
+        .stats-preview {
+            background: transparent !important;
+        }
+
+        /* Стили для страницы патруля */
+        .patrol-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-header h1 {
+            color: #62a744;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+        
+        .section-header p {
+            color: #666;
+            font-size: 1.2em;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .patrol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .patrol-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .patrol-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .patrol-image {
+            width: 100%;
+            height: 250px;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .patrol-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .patrol-card:hover .patrol-image img {
+            transform: scale(1.05);
+        }
+        
+        .patrol-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(98,167,68,0.1), rgba(76,145,50,0.1));
+            z-index: 1;
+        }
+        
+        .patrol-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #62a744;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            z-index: 2;
+        }
+        
+        .patrol-content {
+            padding: 30px;
+        }
+        
+        .patrol-title {
+            color: #62a744;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .patrol-subtitle {
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .patrol-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .patrol-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .patrol-features li {
+            color: #555;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        
+        .patrol-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .patrol-features li i {
+            color: #62a744;
+            margin-right: 10px;
+            width: 20px;
+        }
+        
+        .patrol-stats {
+            display: flex;
+            justify-content: space-around;
+            background: #f8f9fa;
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            color: #62a744;
+            font-size: 1.5em;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Дополнительная информация */
+        .additional-info {
+            padding: 60px 0;
+            background: white;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .info-card {
+            text-align: center;
+            padding: 30px 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-card i {
+            font-size: 3em;
+            color: #62a744;
+            margin-bottom: 20px;
+        }
+
+        .info-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .info-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Галерея машин */
+        .cars-gallery {
+            padding: 60px 0;
+            background: #f8f9fa;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .gallery-item {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .gallery-caption {
+            padding: 15px;
+            background: white;
+            text-align: center;
+        }
+
+        .gallery-caption h4 {
+            color: #62a744;
+            margin-bottom: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .patrol-grid {
+                grid-template-columns: 1fr;
+                padding: 0 15px;
+            }
+            
+            .section-header h1 {
+                font-size: 2em;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка как в index.html -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-traffic-light"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>ЦОДД</h1>
+                    <span>Смоленской области</span>
+                </div>
+            </div>
+            
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Главная</span>
+                    </a></li>
+                    <li><a href="statistics.html" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Статистика</span>
+                    </a></li>
+                    <li><a href="map.html" class="nav-link">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Карта ДТП</span>
+                    </a></li>
+                    <li><a href="services.html" class="nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        <span>Услуги</span>
+                    </a></li>
+                    <li><a href="car.html" class="nav-link active">
+                        <i class="fas fa-car-side"></i>
+                        <span>Дорожный патруль</span>
+                    </a></li>
+                    <li><a href="contacts.html" class="nav-link">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>Контакты</span>
+                    </a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="mobile-menu-btn" id="mobileMenuBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Герой-секция для патруля -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="title-main">Дорожный патруль</span>
+                        <span class="title-sub">Смоленской области</span>
+                    </h1>
+                    <p class="hero-description">Современный автопарк для обеспечения безопасности дорожного движения</p>
+                    
+                    <div class="hero-actions">
+                        <a href="#patrol-cards" class="btn btn-primary">
+                            <i class="fas fa-car-side"></i>
+                            Смотреть патрули
+                        </a>
+                        <a href="contacts.html" class="btn btn-secondary">
+                            <i class="fas fa-phone-alt"></i>
+                            Связаться с нами
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="hero-visual">
+                    <div class="stats-preview">
+                        <div class="stat-badge">
+                            <div class="stat-icon">
+                                <i class="fas fa-car-side"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value">50+</span>
+                                <span class="stat-label">Патрульных машин</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-badge">
+                            <div class="stat-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value">24/7</span>
+                                <span class="stat-label">Круглосуточная работа</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Секция дорожного патруля -->
+    <section id="patrol-cards" class="patrol-section">
+        <div class="section-header">
+            <h2>Наш автопарк</h2>
+            <p>Специализированные транспортные средства для мониторинга и контроля дорожной ситуации</p>
+        </div>
+
+        <div class="patrol-grid">
+            <!-- Патрульная машина 1 -->
+            <div class="patrol-card">
+                <div class="patrol-image">
+                    <div class="patrol-badge">ЦОДД</div>
+                </div>
+                <div class="patrol-content">
+                    <div class="patrol-title">Дорожный патруль</div>
+                    <div class="patrol-subtitle">Центр организации дорожного движения</div>
+                    <p class="patrol-description">Специализированные транспортные средства для мониторинга и контроля дорожной ситуации в реальном времени.</p>
+                    
+                    <ul class="patrol-features">
+                        <li><i class="fas fa-check"></i> Система видеонаблюдения</li>
+                        <li><i class="fas fa-check"></i> GPS-мониторинг</li>
+                        <li><i class="fas fa-check"></i> Автоматическая фиксация нарушений</li>
+                        <li><i class="fas fa-check"></i> Связь с центром управления</li>
+                    </ul>
+                </div>
+                <div class="patrol-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">24/7</span>
+                        <span class="stat-label">Работа</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">50+</span>
+                        <span class="stat-label">Патрулей</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">100%</span>
+                        <span class="stat-label">Охват</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Патрульная машина 2 -->
+            <div class="patrol-card">
+                <div class="patrol-image">
+                    <img src="images/patrol-ЦОДД-2.webp" alt="Автоматический патруль" onerror="this.src='https://via.placeholder.com/400x250/62a744/ffffff?text=Автоматический+патруль'">
+                    <div class="patrol-badge">Авто</div>
+                </div>
+                <div class="patrol-content">
+                    <div class="patrol-title">Дорожный патруль</div>
+                    <div class="patrol-subtitle">Автоматическое применение</div>
+                    <p class="patrol-description">Инновационные системы автоматического контроля и фиксации нарушений правил дорожного движения.</p>
+                    
+                    <ul class="patrol-features">
+                        <li><i class="fas fa-check"></i> Радарный контроль скорости</li>
+                        <li><i class="fas fa-check"></i> Фиксация проезда на красный</li>
+                        <li><i class="fas fa-check"></i> Распознавание номеров</li>
+                        <li><i class="fas fa-check"></i> Онлайн-отчетность</li>
+                    </ul>
+                </div>
+                <div class="patrol-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">0.1с</span>
+                        <span class="stat-label">Реакция</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">99.9%</span>
+                        <span class="stat-label">Точность</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">авто</span>
+                        <span class="stat-label">Режим</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Галерея машин -->
+    <section class="cars-gallery">
+        <div class="section-header">
+            <h2>Галерея патрульных машин</h2>
+            <p>Наш современный автопарк для обеспечения безопасности на дорогах</p>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="images/ЦОДД1.webp" alt="Патрульная машина 1" onerror="this.src='https://via.placeholder.com/400x250/62a744/ffffff?text=Патруль+1'">
+                <div class="gallery-caption">
+                    <h4>Патрульный автомобиль</h4>
+                    <p>Городской патруль</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="images/ЦОДД2.webp" alt="Патрульная машина 2" onerror="this.src='https://via.placeholder.com/400x250/62a744/ffffff?text=Патруль+2'">
+                <div class="gallery-caption">
+                    <h4>Автоматический контроль</h4>
+                    <p>Система видеофиксации</p>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="images/ЦОДД3.webp" alt="Патрульная машина 3" onerror="this.src='https://via.placeholder.com/400x250/62a744/ffffff?text=Патруль+3'">
+                <div class="gallery-caption">
+                    <h4>Мобильный комплекс</h4>
+                    <p>Выездная группа</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Дополнительная информация -->
+    <section class="additional-info">
+        <div class="container">
+            <div class="section-header">
+                <h2>Технологии патрулирования</h2>
+                <p>Современное оборудование для эффективного контроля дорожного движения</p>
+            </div>
+            <div class="info-grid">
+                <div class="info-card">
+                    <i class="fas fa-camera"></i>
+                    <h3>Видеофиксация</h3>
+                    <p>Высококачественные системы записи для доказательства нарушений</p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>Геолокация</h3>
+                    <p>Точное определение местоположения патрульных автомобилей</p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-broadcast-tower"></i>
+                    <h3>Связь</h3>
+                    <p>Непрерывная связь с центром управления дорожным движением</p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-microchip"></i>
+                    <h3>Автоматизация</h3>
+                    <p>Интеллектуальные системы автоматического контроля нарушений</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="container">
+            <!-- Футер как в index.html -->
+        </div>
+    </footer>
+
+    <script>
+        // Загрузка изображений
+        document.addEventListener('DOMContentLoaded', function() {
+            // Предзагрузка изображений
+            const images = [
+                'images/patrol-ЦОДД-1.webp',
+                'images/patrol-ЦОДД-2.webp',
+                'images/ЦОДД1.webp',
+                'images/ЦОДД2.webp',
+                'images/ЦОДД3.webp'
+            ];
+
+            images.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+
+            // Анимация появления карточек
+            const cards = document.querySelectorAll('.patrol-card, .gallery-item');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.2}s`;
+                card.classList.add('fade-in');
+            });
+        });
+    </script>
+</body>
+</html>

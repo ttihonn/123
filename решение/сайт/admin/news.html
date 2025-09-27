@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление новостями - Админ-панель ЦОДД</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>ЦОДД Админ</h2>
+            <p>Панель управления</p>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="index.html">📊 Дашборд</a></li>
+                <li><a href="news.html" class="active">📰 Новости</a></li>
+                <li><a href="data.html">📈 Данные</a></li>
+                <li><a href="users.html">👥 Пользователи</a></li>
+                <li><a href="../index.html">🌐 На сайт</a></li>
+            </ul>
+        </nav>
+        <div class="user-info">
+            <span id="currentUsername">Загрузка...</span>
+            <button id="logoutBtn" class="btn-logout">Выйти</button>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <h1>Управление новостями</h1>
+            <div class="admin-actions">
+                <button class="btn-primary" onclick="showNewsForm()">+ Добавить новость</button>
+                <button id="refreshNews" class="btn-secondary">🔄 Обновить</button>
+            </div>
+        </header>
+
+        <section class="admin-content">
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Заголовок</th>
+                            <th>Дата</th>
+                            <th>Статус</th>
+                            <th>Автор</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="newsTableBody">
+                        <!-- Новости будут загружены через JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Модальное окно для редактирования новости -->
+    <div id="newsModal" class="modal">
+        <div class="modal-content large">
+            <span class="close">&times;</span>
+            <h2 id="newsModalTitle">Добавить новость</h2>
+            <form id="newsForm" class="news-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="newsTitle">Заголовок *</label>
+                        <input type="text" id="newsTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newsDate">Дата публикации *</label>
+                        <input type="datetime-local" id="newsDate" name="date" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="newsImage">URL изображения</label>
+                    <input type="url" id="newsImage" name="image_url" placeholder="https://example.com/image.jpg">
+                </div>
+                <div class="form-group">
+                    <label for="newsContent">Содержание *</label>
+                    <textarea id="newsContent" name="content" rows="10" required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="newsPublished">
+                            <input type="checkbox" id="newsPublished" name="is_published" checked>
+                            Опубликовать сразу
+                        </label>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Сохранить</button>
+                    <button type="button" class="btn-secondary" onclick="closeNewsModal()">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/data.js"></script>
+    <script src="../js/admin.js"></script>
+    <script src="../js/admin-news.js"></script>
+</body>
+</html>

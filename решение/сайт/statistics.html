@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ЦОДД Смоленской области - Статистика аварийности</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles - ИЗМЕНЕНО НА ЗЕЛЕНЫЙ */
+        header {
+            background: linear-gradient(135deg, #62a744 0%, #558c3a 100%);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            margin-right: 10px;
+            color: white;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .official-portal {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            text-align: right;
+            color: rgba(255,255,255,0.9);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 10px;
+        }
+        
+        nav li {
+            margin-right: 25px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 5px 0;
+            display: block;
+            cursor: pointer;
+        }
+        
+        nav a:hover, nav a.active {
+            color: #e8f5e8;
+            border-bottom: 2px solid #e8f5e8;
+        }
+        
+        /* Кнопка "Наверх" */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #62a744;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .scroll-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .scroll-to-top:hover {
+            background-color: #558c3a;
+            transform: translateY(-3px);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 30px 0;
+            min-height: 70vh;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background: white;
+            padding: 20px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #62a744;
+        }
+        
+        .page-header h2 {
+            color: #1e3c72;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .filters {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.9rem;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-select:hover {
+            border-color: #62a744;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: #62a744;
+            box-shadow: 0 0 0 2px rgba(98, 167, 68, 0.2);
+        }
+        
+        .update-btn {
+            background: linear-gradient(135deg, #62a744 0%, #558c3a 100%);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(98, 167, 68, 0.3);
+        }
+        
+        .update-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(98, 167, 68, 0.4);
+        }
+        
+        .update-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Stats Overview */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #62a744, #1e3c72);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .stat-card h3 {
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-value {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #1e3c72;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stat-change {
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .stat-change.positive {
+            background: rgba(98, 167, 68, 0.1);
+            color: #62a744;
+        }
+        
+        .stat-change.negative {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+        
+        /* Charts Section */
+        .charts-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin: 0;
+        }
+        
+        .year-toggle {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 4px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .year-btn {
+            padding: 8px 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s;
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .year-btn.active {
+            background: #62a744;
+            color: white;
+            box-shadow: 0 2px 8px rgba(98, 167, 68, 0.3);
+        }
+        
+        .chart-container {
+            height: 350px;
+            position: relative;
+        }
+        
+        /* Detailed Statistics */
+        .detailed-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+        
+        .stat-box h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #1e3c72;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f2f5;
+            font-weight: 700;
+        }
+        
+        .data-source {
+            margin-top: 40px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .data-source h3 {
+            margin-bottom: 20px;
+            color: #1e3c72;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .source-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .source-link {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            text-decoration: none;
+            color: #1e3c72;
+            transition: all 0.3s;
+            font-weight: 500;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .source-link:hover {
+            background: linear-gradient(135deg, #62a744 0%, #558c3a 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(98, 167, 68, 0.3);
+        }
+        
+        /* Стили для страницы Архитектуры */
+        .architecture-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .architecture-content h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 2rem;
+        }
+        
+        .architecture-diagram {
+            max-width: 100%;
+            height: auto;
+            margin: 30px 0;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f9f9f9;
+            text-align: center;
+        }
+        
+        .architecture-list {
+            list-style-type: none;
+            margin: 30px 0;
+        }
+        
+        .architecture-list li {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+        
+        .architecture-list i {
+            color: #62a744;
+            margin-right: 15px;
+            font-size: 1.3rem;
+            width: 30px;
+        }
+        
+        /* Footer - ИЗМЕНЕНО НА ЗЕЛЕНЫЙ */
+        footer {
+            background: linear-gradient(135deg, #62a744 0%, #558c3a 100%);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            color: #e8f5e8;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section li {
+            margin-bottom: 10px;
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .footer-section a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: #e8f5e8;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+        }
+        
+        /* Page Sections */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .page-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .official-portal {
+                text-align: center;
+                margin-top: 10px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav li {
+                margin: 5px 10px;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .filters {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+            
+            .stats-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .detailed-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .scroll-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Кнопка "Наверх" -->
+    <div class="scroll-to-top" id="scrollToTop">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo" id="logo">
+                    <i class="fas fa-traffic-light"></i>
+                    <div>
+                        <div class="logo-text">ЦОДД Смоленской области</div>
+                        <div class="official-portal">Официальный портал дорожной безопасности</div>
+                    </div>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="nav-link">Главная</a></li>
+                    <li><a href="#" class="nav-link active" data-page="statistics">Статистика</a></li>
+                    <li><a href="#" class="nav-link" data-page="architecture">Архитектура системы</a></li>
+                    <li><a href="#" class="nav-link" data-page="services">Услуги</a></li>
+                    <li><a href="#" class="nav-link" data-page="news">Новости</a></li>
+                    <li><a href="#" class="nav-link" data-page="contacts">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container main-content">
+        <!-- Страница статистики -->
+        <section id="statistics" class="page-section active">
+            <div class="page-header">
+                <h2>Статистика аварийности</h2>
+                <div class="filters">
+                    <select class="filter-select">
+                        <option>2024 год</option>
+                        <option>2023 год</option>
+                        <option>2022 год</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>ДТП и аварийность</option>
+                        <option>Нарушения ПДД</option>
+                        <option>Состояние дорог</option>
+                    </select>
+                    <button class="update-btn">
+                        <i class="fas fa-sync-alt"></i>
+                        Обновить данные
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <h3>Количество ДТП</h3>
+                    <div class="stat-value">127</div>
+                    <div class="stat-change positive">-5% за последний год</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Пострадавшие</h3>
+                    <div class="stat-value">154</div>
+                    <div class="stat-change negative">+2% за последний год</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Погибшие</h3>
+                    <div class="stat-value">18</div>
+                    <div class="stat-change positive">-10% за последний год</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Экономический ущерб</h3>
+                    <div class="stat-value">42.5 млн ₽</div>
+                    <div class="stat-change negative">+3% за последний год</div>
+                </div>
+            </div>
+
+            <div class="charts-section">
+                <div class="section-header">
+                    <div class="section-title">Динамика ДТП по месяцам</div>
+                    <div class="year-toggle">
+                        <button class="year-btn">2023 год</button>
+                        <button class="year-btn active">2024 год</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+
+            <div class="detailed-stats">
+                <div class="stat-box">
+                    <h3>ДТП по типам</h3>
+                    <div class="chart-container">
+                        <canvas id="typeChart"></canvas>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <h3>ДТП по времени суток</h3>
+                    <div class="chart-container">
+                        <canvas id="timeChart"></canvas>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <h3>Сравнение с соседними регионами</h3>
+                    <div class="chart-container">
+                        <canvas id="regionChart"></canvas>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <h3>ДТП по видам транспорта</h3>
+                    <div class="chart-container">
+                        <canvas id="transportChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-source">
+                <h3>Данные предоставлены:</h3>
+                <div class="source-links">
+                    <a href="http://stat.gibdd.ru/" class="source-link" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                        Статистика ГИБДД
+                    </a>
+                    <a href="https://xn--b1aew.xn--p1ai/%D0%BE%D1%82%D0%BA%D1%80%D1%8B%D1%82%D1%8B%D0%B5-%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5/7727739372-MVD_GIAC_3.1" class="source-link" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                        Открытые данные МВД
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Страница архитектуры системы -->
+        <section id="architecture" class="page-section">
+            <div class="page-header">
+                <h2>Архитектура системы ЦОДД</h2>
+            </div>
+            
+            <div class="architecture-content">
+                <h2>Структура центра организации дорожного движения</h2>
+                
+                <div class="architecture-diagram">
+                    <h3 style="text-align: center; margin-bottom: 20px; color: #1e3c72;">Схема системы ЦОДД</h3>
+                    <div style="display: flex; justify-content: center; align-items: center; height: 200px; background: #e9ecef; border-radius: 5px;">
+                        <p style="color: #666; font-size: 1.1rem;">Здесь будет размещена схема архитектуры системы</p>
+                    </div>
+                </div>
+                
+                <h3 style="color: #1e3c72; margin-top: 30px;">Основные компоненты системы:</h3>
+                <ul class="architecture-list">
+                    <li><i class="fas fa-server"></i> Центр обработки данных</li>
+                    <li><i class="fas fa-video"></i> Система видеонаблюдения</li>
+                    <li><i class="fas fa-traffic-light"></i> Автоматизированная система управления светофорами</li>
+                    <li><i class="fas fa-map-marked-alt"></i> Геоинформационная система</li>
+                    <li><i class="fas fa-car-side"></i> Система детекции транспорта</li>
+                    <li><i class="fas fa-chart-bar"></i> Аналитическая платформа</li>
+                    <li><i class="fas fa-broadcast-tower"></i> Система связи и передачи данных</li>
+                </ul>
+                
+                <p style="font-size: 1.1rem; line-height: 1.8; color: #555;">
+                    ЦОДД Смоленской области интегрирует данные с более чем 200 камер наблюдения, 89 умных светофоров и датчиков движения 
+                    для создания единой картины дорожной ситуации в режиме реального времени. Система обеспечивает мониторинг, анализ 
+                    и управление дорожным движением на территории всей области.
+                </p>
+            </div>
+        </section>
+
+        <!-- Страница услуг -->
+        <section id="services" class="page-section">
+            <div class="page-header">
+                <h2>Услуги ЦОДД</h2>
+            </div>
+            
+            <div class="architecture-content">
+                <h2>Наши услуги</h2>
+                <p>ЦОДД предоставляет широкий спектр услуг по организации и управлению дорожным движением.</p>
+                
+                <div class="architecture-list">
+                    <li><i class="fas fa-info-circle"></i> Информационные услуги и консультации</li>
+                    <li><i class="fas fa-traffic-light"></i> Управление светофорными объектами</li>
+                    <li><i class="fas fa-chart-line"></i> Аналитика дорожной ситуации</li>
+                    <li><i class="fas fa-map"></i> Разработка схем организации движения</li>
+                </div>
+            </div>
+        </section>
+
+        <!-- Страница новостей -->
+        <section id="news" class="page-section">
+            <div class="page-header">
+                <h2>Новости ЦОДД</h2>
+            </div>
+            
+            <div class="architecture-content">
+                <h2>Последние новости</h2>
+                <p>Актуальная информация о деятельности центра организации дорожного движения.</p>
+                
+                <div class="architecture-list">
+                    <li><i class="fas fa-newspaper"></i> Внедрение новой системы управления - 15.05.2024</li>
+                    <li><i class="fas fa-chart-bar"></i> Отчет по аварийности за I квартал - 28.04.2024</li>
+                    <li><i class="fas fa-camera"></i> Установка новых камер наблюдения - 12.04.2024</li>
+                </div>
+            </div>
+        </section>
+
+        <!-- Страница контактов -->
+        <section id="contacts" class="page-section">
+            <div class="page-header">
+                <h2>Контакты ЦОДД</h2>
+            </div>
+            
+            <div class="architecture-content">
+                <h2>Контактная информация</h2>
+                
+                <div class="architecture-list">
+                    <li><i class="fas fa-map-marker-alt"></i> Адрес: г. Смоленск, ул. Ленина, 1</li>
+                    <li><i class="fas fa-phone"></i> Телефон: +7 (4812) 12-34-56</li>
+                    <li><i class="fas fa-envelope"></i> Email: info@codd-smolensk.ru</li>
+                    <li><i class="fas fa-clock"></i> Режим работы: Пн-Пт 9:00-18:00</li>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ЦОДД Смоленской области</h3>
+                    <p>Официальный портал дорожной безопасности и управления транспортной инфраструктурой региона.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Контакты</h3>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> +7 (4812) 12-34-56</li>
+                        <li><i class="fas fa-envelope"></i> info@codd-smolensk.ru</li>
+                        <li><i class="fas fa-map-marker-alt"></i> г. Смоленск, ул. Ленина, 1</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Полезные ссылки</h3>
+                    <ul>
+                        <li><a href="#">Дорожная карта</a></li>
+                        <li><a href="#">Правила дорожного движения</a></li>
+                        <li><a href="#">Штрафы и оплата</a></li>
+                        <li><a href="#">Камеры наблюдения</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2024 ЦОДД Смоленской области. Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Навигация между страницами
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pageSections = document.querySelectorAll('.page-section');
+            const scrollToTopBtn = document.getElementById('scrollToTop');
+            const logo = document.getElementById('logo');
+            
+            // Функция переключения страниц
+            function showPage(pageId) {
+                // Скрываем все страницы
+                pageSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Показываем выбранную страницу
+                const activeSection = document.getElementById(pageId);
+                if (activeSection) {
+                    activeSection.classList.add('active');
+                }
+                
+                // Обновляем активную ссылку в навигации
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-page') === pageId) {
+                        link.classList.add('active');
+                    }
+                });
+                
+                // Прокручиваем к началу страницы
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Если перешли на страницу статистики, инициализируем графики
+                if (pageId === 'statistics') {
+                    initCharts();
+                }
+            }
+            
+            // Обработчики кликов по ссылкам навигации
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+                    if (pageId) {
+                        showPage(pageId);
+                    }
+                });
+            });
+            
+            // Обработчик клика по логотипу для перехода на главную
+            logo.addEventListener('click', function() {
+                window.location.href = 'index.html';
+            });
+            
+            // Функция для кнопки "Наверх"
+            function toggleScrollToTopButton() {
+                if (window.pageYOffset > 300) {
+                    scrollToTopBtn.classList.add('visible');
+                } else {
+                    scrollToTopBtn.classList.remove('visible');
+                }
+            }
+            
+            // Обработчик клика по кнопке "Наверх"
+            scrollToTopBtn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            
+            // Слушаем событие прокрутки
+            window.addEventListener('scroll', toggleScrollToTopButton);
+            
+            // Инициализация графиков для страницы статистики
+            function initCharts() {
+                // Проверяем, инициализированы ли уже графики
+                if (window.chartsInitialized) return;
+                
+                // График динамики ДТП по месяцам
+                const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+                const monthlyChart = new Chart(monthlyCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+                        datasets: [{
+                            label: '2024 год',
+                            data: [14, 12, 11, 10, 13, 15, 16, 14, 10, 9, 8, 5],
+                            borderColor: '#62a744',
+                            backgroundColor: 'rgba(98, 167, 68, 0.1)',
+                            tension: 0.3,
+                            fill: true,
+                            borderWidth: 3
+                        }, {
+                            label: '2023 год',
+                            data: [16, 14, 13, 12, 14, 16, 17, 15, 12, 11, 10, 8],
+                            borderColor: '#1e3c72',
+                            backgroundColor: 'rgba(30, 60, 114, 0.1)',
+                            tension: 0.3,
+                            fill: true,
+                            borderDash: [5, 5],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    font: {
+                                        size: 12,
+                                        weight: '600'
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Количество ДТП',
+                                    font: {
+                                        weight: '600'
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(0,0,0,0.05)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: 'rgba(0,0,0,0.05)'
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                // Остальные графики...
+                
+                window.chartsInitialized = true;
+            }
+            
+            // Инициализируем графики, если текущая страница - статистика
+            if (document.getElementById('statistics').classList.contains('active')) {
+                initCharts();
+            }
+        });
+    </script>
+</body>
+</html>

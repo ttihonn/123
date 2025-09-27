@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проекты - ЦОДД Смоленской области</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>ЦОДД Смоленской области</h1>
+                <p>Технологии для безопасных дорог</p>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="dashboard.html">Аналитика</a></li>
+                    <li><a href="services.html">Услуги</a></li>
+                    <li><a href="news.html">Новости</a></li>
+                    <li><a href="projects.html" class="active">Проекты</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                    <li><a href="admin/index.html" class="admin-link">Админ-панель</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-menu-btn">☰</div>
+        </div>
+    </header>
+
+    <main class="projects-main">
+        <div class="container">
+            <h1>Проекты ЦОДД</h1>
+            <p class="subtitle">Текущие и завершенные проекты по улучшению дорожной инфраструктуры</p>
+
+            <div class="project-filters">
+                <button class="filter-btn active" data-filter="all">Все проекты</button>
+                <button class="filter-btn" data-filter="planned">Запланированные</button>
+                <button class="filter-btn" data-filter="in_progress">В процессе</button>
+                <button class="filter-btn" data-filter="completed">Завершенные</button>
+            </div>
+
+            <div id="projectsList" class="projects-grid">
+                <!-- Проекты будут загружены через JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ЦОДД Смоленской области</h3>
+                    <p>Повышение безопасности и комфорта дорожного движения через внедрение цифровых технологий</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <p>г. Смоленск, ул. Примерная, 123</p>
+                    <p>+7 (4812) 12-34-56</p>
+                    <p>info@codd-smolensk.ru</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Режим работы</h4>
+                    <p>Пн-Пт: 9:00-18:00</p>
+                    <p>Сб-Вс: выходной</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/projects.js"></script>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты - ЦОДД Смоленской области</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="contacts-page">
+    <!-- Шапка как на главной странице -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-traffic-light"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>ЦОДД</h1>
+                    <span>Смоленской области</span>
+                </div>
+            </div>
+            
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Главная</span>
+                    </a></li>
+                    <li><a href="statistics.html" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Статистика</span>
+                    </a></li>
+                    <li><a href="map.html" class="nav-link">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Карта ДТП</span>
+                    </a></li>
+                    <li><a href="services.html" class="nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        <span>Услуги</span>
+                    </a></li>
+                    <li><a href="contacts.html" class="nav-link active">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>Контакты</span>
+                    </a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="mobile-menu-btn" id="mobileMenuBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="contacts-main">
+        <div class="container">
+            <div class="section-header">
+                <h2>Контакты ЦОДД Смоленской области</h2>
+                <p>Свяжитесь с нами удобным для вас способом</p>
+            </div>
+
+            <div class="contacts-grid">
+                <!-- Контактная информация -->
+                <div class="contact-info-section">
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-content">
+                            <h3>Адрес</h3>
+                            <p>г. Смоленск, ул. Примерная, 123</p>
+                            <span class="contact-detail">Кабинет приема граждан: 101</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-content">
+                            <h3>Телефоны</h3>
+                            <p><strong>Общий отдел:</strong> +7 (4812) 12-34-56</p>
+                            <p><strong>Техническая поддержка:</strong> +7 (4812) 12-34-57</p>
+                            <p><strong>Горячая линия:</strong> +7 (4812) 12-34-58</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-content">
+                            <h3>Email</h3>
+                            <p><strong>Общие вопросы:</strong> info@codd-smolensk.ru</p>
+                            <p><strong>Техподдержка:</strong> support@codd-smolensk.ru</p>
+                            <p><strong>Пресс-служба:</strong> press@codd-smolensk.ru</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="contact-content">
+                            <h3>Режим работы</h3>
+                            <p><strong>Пн-Чт:</strong> 9:00-18:00</p>
+                            <p><strong>Пт:</strong> 9:00-17:00</p>
+                            <p><strong>Сб-Вс:</strong> выходной</p>
+                            <p><strong>Обед:</strong> 13:00-14:00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Форма обратной связи -->
+                <div class="contact-form-section">
+                    <div class="form-card">
+                        <h3>Обратная связь</h3>
+                        <form id="feedbackForm" class="contact-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="name">Ваше имя *</label>
+                                    <input type="text" id="name" name="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email *</label>
+                                    <input type="email" id="email" name="email" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone">Телефон</label>
+                                <input type="tel" id="phone" name="phone">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="subject">Тема обращения *</label>
+                                <select id="subject" name="subject" required>
+                                    <option value="">Выберите тему</option>
+                                    <option value="question">Вопрос по услугам</option>
+                                    <option value="complaint">Жалоба</option>
+                                    <option value="suggestion">Предложение</option>
+                                    <option value="cooperation">Сотрудничество</option>
+                                    <option value="other">Другое</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message">Сообщение *</label>
+                                <textarea id="message" name="message" rows="5" placeholder="Опишите вашу проблему или вопрос..." required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="attachment">Прикрепить файлы</label>
+                                <input type="file" id="attachment" name="attachment" multiple>
+                                <small>Максимальный размер файла: 10MB</small>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                Отправить сообщение
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Карта и транспорт -->
+            <div class="map-section">
+                <div class="section-header">
+                    <h3>Как добраться</h3>
+                    <p>Расположение нашего офиса в Смоленске</p>
+                </div>
+                
+                <div class="map-container">
+                    <div class="map-placeholder">
+                        <div class="map-content">
+                            <div class="map-address">
+                                <i class="fas fa-map-pin"></i>
+                                <strong>Адрес:</strong> г. Смоленск, ул. Примерная, 123
+                            </div>
+                            
+                            <div class="transport-info">
+                                <h4>Общественный транспорт:</h4>
+                                <div class="transport-list">
+                                    <div class="transport-item">
+                                        <i class="fas fa-bus"></i>
+                                        <span>Автобусы: 1, 5, 10, 15</span>
+                                        <small>остановка "Улица Примерная"</small>
+                                    </div>
+                                    <div class="transport-item">
+                                        <i class="fas fa-train"></i>
+                                        <span>Троллейбусы: 2, 4, 7</span>
+                                        <small>остановка "Центр"</small>
+                                    </div>
+                                    <div class="transport-item">
+                                        <i class="fas fa-subway"></i>
+                                        <span>Маршрутки: 15к, 22к, 33к</span>
+                                        <small>остановка "Городская администрация"</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Футер как на главной странице -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-traffic-light"></i>
+                        <div>
+                            <h3>ЦОДД Смоленской области</h3>
+                            <p>Официальный портал дорожной безопасности</p>
+                        </div>
+                    </div>
+                    <p class="footer-description">
+                        Система мониторинга и анализа дорожно-транспортных происшествий. 
+                        Данные обновляются в реальном времени.
+                    </p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Навигация</h4>
+                    <nav class="footer-nav">
+                        <a href="index.html">Главная</a>
+                        <a href="statistics.html">Статистика</a>
+                        <a href="map.html">Карта ДТП</a>
+                        <a href="services.html">Услуги</a>
+                        <a href="contacts.html">Контакты</a>
+                    </nav>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>г. Смоленск, ул. Примерная, 123</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+7 (4812) 12-34-56</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@codd-smolensk.ru</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Подписка на обновления</h4>
+                    <div class="newsletter">
+                        <input type="email" placeholder="Ваш email" class="newsletter-input">
+                        <button class="newsletter-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-vk"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 ЦОДД Смоленской области. Все права защищены.</p>
+                <div class="footer-links">
+                    <a href="#">Политика конфиденциальности</a>
+                    <a href="#">Пользовательское соглашение</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/contacts.js"></script>
+</body>
+</html>

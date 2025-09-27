@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аналитика дорожного движения - ЦОДД Смоленской области</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>ЦОДД Смоленской области</h1>
+                <p>Технологии для безопасных дорог</p>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="dashboard.html" class="active">Аналитика</a></li>
+                    <li><a href="services.html">Услуги</a></li>
+                    <li><a href="news.html">Новости</a></li>
+                    <li><a href="projects.html">Проекты</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                    <li><a href="admin/index.html" class="admin-link">Админ-панель</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-menu-btn">☰</div>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        <div class="container">
+            <h1>Аналитика дорожного движения</h1>
+            <p class="subtitle">Статистика и ключевые показатели в реальном времени</p>
+
+            <!-- Фильтры -->
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="period">Период:</label>
+                    <select id="period">
+                        <option value="7">7 дней</option>
+                        <option value="30" selected>30 дней</option>
+                        <option value="90">90 дней</option>
+                        <option value="365">Год</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="dataType">Тип данных:</label>
+                    <select id="dataType">
+                        <option value="all">Все данные</option>
+                        <option value="accidents">ДТП</option>
+                        <option value="fines">Штрафы</option>
+                        <option value="towing">Эвакуация</option>
+                    </select>
+                </div>
+                <button id="applyFilters" class="btn-primary">Применить</button>
+                <button id="exportData" class="btn-secondary">Экспорт в CSV</button>
+            </div>
+
+            <!-- Ключевые метрики -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h3>ДТП и аварийность</h3>
+                    <div class="metric-value" id="accidentsCount">0</div>
+                    <div class="metric-change" id="accidentsChange">+0%</div>
+                    <canvas id="accidentsChart" width="400" height="200"></canvas>
+                </div>
+
+                <div class="metric-card">
+                    <h3>Штрафы и нарушения</h3>
+                    <div class="metric-value" id="finesCount">0</div>
+                    <div class="metric-change" id="finesChange">+0%</div>
+                    <canvas id="finesChart" width="400" height="200"></canvas>
+                </div>
+
+                <div class="metric-card">
+                    <h3>Эвакуация транспорта</h3>
+                    <div class="metric-value" id="towingCount">0</div>
+                    <div class="metric-change" id="towingChange">+0%</div>
+                    <canvas id="towingChart" width="400" height="200"></canvas>
+                </div>
+
+                <div class="metric-card">
+                    <h3>Работа светофоров</h3>
+                    <div class="metric-value" id="trafficLightsCount">0</div>
+                    <div class="metric-change" id="trafficLightsChange">+0%</div>
+                    <canvas id="trafficLightsChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Детализированная таблица -->
+            <div class="table-section">
+                <h2>Детализация данных</h2>
+                <div class="table-container">
+                    <table id="dataTable" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>ДТП</th>
+                                <th>Пострадавшие</th>
+                                <th>Погибшие</th>
+                                <th>Нарушения</th>
+                                <th>Эвакуировано ТС</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Данные будут загружены через JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Карта светофоров -->
+            <div class="map-section">
+                <h2>Карта светофоров и дорожной инфраструктуры</h2>
+                <div id="trafficMap" class="map-container">
+                    <div class="map-placeholder">
+                        <p>Интерактивная карта дорожной инфраструктуры</p>
+                        <div class="map-legend">
+                            <div class="legend-item">
+                                <span class="legend-color working"></span>
+                                <span>Работает</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color repairing"></span>
+                                <span>В ремонте</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color planned"></span>
+                                <span>Запланирован</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ЦОДД Смоленской области</h3>
+                    <p>Повышение безопасности и комфорта дорожного движения через внедрение цифровых технологий</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <p>г. Смоленск, ул. Примерная, 123</p>
+                    <p>+7 (4812) 12-34-56</p>
+                    <p>info@codd-smolensk.ru</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Режим работы</h4>
+                    <p>Пн-Пт: 9:00-18:00</p>
+                    <p>Сб-Вс: выходной</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

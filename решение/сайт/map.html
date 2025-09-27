@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карта ДТП - ЦОДД Смоленской области</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <style>
+        .map-fullscreen {
+            padding: 100px 0 0;
+            height: calc(100vh - 100px);
+        }
+        
+        .map-fullscreen .map-container {
+            height: 100%;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 0;
+        }
+        
+        .map-fullscreen .heat-map {
+            height: 100%;
+            width: 100%;
+        }
+        
+        .map-wrapper {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        .map-overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.9);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .map-legend h5 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+        }
+        
+        .scale-gradient {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .gradient-bar {
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(to right, blue, cyan, green, yellow, red);
+            margin: 5px 0;
+        }
+        
+        .scale-min, .scale-max {
+            font-size: 12px;
+        }
+        
+        .map-tooltip {
+            display: none;
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            font-size: 14px;
+            max-width: 250px;
+        }
+        
+        .map-sidebar {
+            background: #f8f9fa;
+            padding: 20px;
+            overflow-y: auto;
+            border-left: 1px solid #dee2e6;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+        
+        .sidebar-section h4 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+        
+        .districts-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .district-item {
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid #3498db;
+        }
+        
+        .district-item:hover {
+            background: #e3f2fd;
+            transform: translateX(5px);
+        }
+        
+        .district-item.active {
+            background: #bbdefb;
+            border-left-color: #1565c0;
+        }
+        
+        .accident-item {
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .accident-severity {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        
+        .severity-fatal {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .severity-injured {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .severity-property {
+            background: #3498db;
+            color: white;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+        }
+        
+        .positive {
+            color: #27ae60;
+        }
+        
+        .negative {
+            color: #e74c3c;
+        }
+        
+        @media (max-width: 768px) {
+            .map-fullscreen .map-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .map-sidebar {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body class="map-page">
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-traffic-light"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>ЦОДД</h1>
+                    <span>Смоленской области</span>
+                </div>
+            </div>
+            
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Главная</span>
+                    </a></li>
+                    <li><a href="statistics.html" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Статистика</span>
+                    </a></li>
+                    <li><a href="map.html" class="nav-link active">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Карта ДТП</span>
+                    </a></li>
+                    <li><a href="services.html" class="nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        <span>Услуги</span>
+                    </a></li>
+                    <li><a href="contacts.html" class="nav-link">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>Контакты</span>
+                    </a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="mobile-menu-btn" id="mobileMenuBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="interactive-map map-fullscreen">
+        <div class="container">
+            <div class="section-header">
+                <h2>Интерактивная карта ДТП Смоленской области</h2>
+                <p>Реальные данные о дорожно-транспортных происшествиях в режиме реального времени</p>
+            </div>
+
+            <div class="map-controls">
+                <div class="control-group">
+                    <label>Период:</label>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-period="week">Неделя</button>
+                        <button class="filter-btn" data-period="month">Месяц</button>
+                        <button class="filter-btn" data-period="quarter">Квартал</button>
+                        <button class="filter-btn" data-period="year">Год</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Тип ДТП:</label>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-type="all">Все ДТП</button>
+                        <button class="filter-btn" data-type="fatal">С погибшими</button>
+                        <button class="filter-btn" data-type="injured">С пострадавшими</button>
+                        <button class="filter-btn" data-type="property">Материальный ущерб</button>
+                    </div>
+                </div>
+
+                <button class="btn-refresh" id="refreshMapData">
+                    <i class="fas fa-sync-alt"></i>
+                    Обновить данные
+                </button>
+            </div>
+        </div>
+
+        <div class="map-wrapper">
+            <div class="map-container">
+                <div id="accidentsMap" class="heat-map">
+                    <div class="map-overlay" id="mapLegend">
+    <div class="map-legend">
+        <h5>
+            Интенсивность ДТП
+            <button class="legend-toggle" id="legendToggle" title="Свернуть/развернуть">
+                <i class="fas fa-chevron-up"></i>
+            </button>
+        </h5>
+        <div class="map-legend-content">
+            <div class="scale-gradient">
+                <div class="gradient-bar"></div>
+                <div class="scale-labels">
+                    <span class="scale-min">Низкая</span>
+                    <span class="scale-max">Высокая</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+                <div class="map-sidebar">
+                    <div class="sidebar-section">
+                        <h4>Районы Смоленской области</h4>
+                        <div class="districts-list" id="districtsList">
+                            <!-- Районы будут загружены через JS -->
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h4>Топ-5 аварийных участков</h4>
+                        <div class="top-accidents" id="topAccidents">
+                            <!-- Данные будут загружены через JS -->
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h4>Статистика по выбранному району</h4>
+                        <div class="district-stats" id="districtStats">
+                            <p>Выберите район для просмотра статистики</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <script src="js/map.js"></script>
+</body>
+</html>

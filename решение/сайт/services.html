@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Услуги - ЦОДД Смоленской области</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>ЦОДД Смоленской области</h1>
+                <p>Технологии для безопасных дорог</p>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="dashboard.html">Аналитика</a></li>
+                    <li><a href="services.html" class="active">Услуги</a></li>
+                    <li><a href="news.html">Новости</a></li>
+                    <li><a href="projects.html">Проекты</a></li>
+                    <li><a href="contacts.html">Контакты</a></li>
+                    <li><a href="admin/index.html" class="admin-link">Админ-панель</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-menu-btn">☰</div>
+        </div>
+    </header>
+
+    <main class="services-main">
+        <div class="container">
+            <h1>Услуги ЦОДД</h1>
+            <p class="subtitle">Все услуги для участников дорожного движения</p>
+
+            <div class="services-grid">
+                <div class="service-detail-card">
+                    <h2>Парковочные разрешения</h2>
+                    <div class="service-info">
+                        <div class="service-meta">
+                            <span class="price">Бесплатно</span>
+                            <span class="duration">Срок: 10 рабочих дней</span>
+                        </div>
+                        <p>Оформление резидентских парковочных разрешений для жителей домов в зонах платной парковки.</p>
+                        <ul class="service-features">
+                            <li>Онлайн-подача заявления</li>
+                            <li>Отслеживание статуса заявки</li>
+                            <li>Электронное уведомление о готовности</li>
+                        </ul>
+                    </div>
+                    <button class="btn-primary" onclick="openServiceModal('parking')">Подать заявление</button>
+                </div>
+
+                <div class="service-detail-card">
+                    <h2>Обжалование штрафов</h2>
+                    <div class="service-info">
+                        <div class="service-meta">
+                            <span class="price">Бесплатно</span>
+                            <span class="duration">Срок: 30 календарных дней</span>
+                        </div>
+                        <p>Подача жалоб на постановления о нарушении ПДД, вынесенные автоматическими средствами фиксации.</p>
+                        <ul class="service-features">
+                            <li>Электронная подача жалобы</li>
+                            <li>Прикрепление доказательств</li>
+                            <li>Уведомление о результате рассмотрения</li>
+                        </ul>
+                    </div>
+                    <button class="btn-primary" onclick="openServiceModal('appeal')">Подать жалобу</button>
+                </div>
+
+                <div class="service-detail-card">
+                    <h2>Заявка на установку светофора</h2>
+                    <div class="service-info">
+                        <div class="service-meta">
+                            <span class="price">Бесплатно</span>
+                            <span class="duration">Рассмотрение: 60 дней</span>
+                        </div>
+                        <p>Подача предложений по установке новых светофорных объектов или модернизации существующих.</p>
+                        <ul class="service-features">
+                            <li>Обоснование необходимости</li>
+                            <li>Прикрепление фото/видео материалов</li>
+                            <li>Общественное обсуждение</li>
+                        </ul>
+                    </div>
+                    <button class="btn-primary" onclick="openServiceModal('traffic-light')">Подать заявку</button>
+                </div>
+            </div>
+
+            <!-- Дополнительные услуги -->
+            <div class="additional-services">
+                <h2>Дополнительные услуги</h2>
+                <div class="services-list">
+                    <div class="service-item">
+                        <h3>Информация о дорожной ситуации</h3>
+                        <p>Актуальные данные о заторах, дорожных работах и временных ограничениях</p>
+                    </div>
+                    <div class="service-item">
+                        <h3>Согласование перевозок</h3>
+                        <p>Оформление разрешений на перевозку крупногабаритных и тяжеловесных грузов</p>
+                    </div>
+                    <div class="service-item">
+                        <h3>Консультации по ПДД</h3>
+                        <p>Разъяснения спорных ситуаций и изменений в правилах дорожного движения</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Модальное окно для услуг -->
+    <div id="serviceModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Подача заявления</h2>
+            <form id="serviceForm" class="service-form">
+                <div class="form-group">
+                    <label for="applicantName">ФИО заявителя *</label>
+                    <input type="text" id="applicantName" required>
+                </div>
+                <div class="form-group">
+                    <label for="applicantEmail">Email *</label>
+                    <input type="email" id="applicantEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="applicantPhone">Телефон *</label>
+                    <input type="tel" id="applicantPhone" required>
+                </div>
+                <div id="additionalFields">
+                    <!-- Дополнительные поля будут добавляться динамически -->
+                </div>
+                <div class="form-group">
+                    <label for="message">Дополнительная информация</label>
+                    <textarea id="message" rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Отправить заявление</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ЦОДД Смоленской области</h3>
+                    <p>Повышение безопасности и комфорта дорожного движения через внедрение цифровых технологий</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <p>г. Смоленск, ул. Примерная, 123</p>
+                    <p>+7 (4812) 12-34-56</p>
+                    <p>info@codd-smolensk.ru</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Режим работы</h4>
+                    <p>Пн-Пт: 9:00-18:00</p>
+                    <p>Сб-Вс: выходной</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/services.js"></script>
+</body>
+</html>

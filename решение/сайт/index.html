@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ЦОДД Смоленской области - Официальный портал дорожной безопасности</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preload" href="js/app.js" as="script">
+    <style>
+        /* Добавляем стили для белого текста и иконок в блоке статистики */
+        .stats-preview .stat-badge {
+            color: white !important;
+        }
+        
+        .stats-preview .stat-icon i {
+            color: white !important;
+        }
+        
+        .stats-preview .stat-value {
+            color: white !important;
+        }
+        
+        .stats-preview .stat-label {
+            color: white !important;
+        }
+        
+        /* Дополнительные стили для лучшей видимости */
+        .hero-visual {
+            background: transparent !important;
+        }
+        
+        .stats-preview {
+            background: transparent !important;
+        }
+
+        /* Стили для новой секции Дорожного патруля */
+        .patrol-section {
+            padding: 5rem 0;
+            background: var(--background-light);
+        }
+
+        .patrol-highlight {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .patrol-highlight h2 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .patrol-highlight p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .patrol-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .patrol-feature {
+            text-align: center;
+            padding: 2rem;
+            background: var(--background-light);
+            border-radius: var(--radius-md);
+            transition: var(--transition-normal);
+        }
+
+        .patrol-feature:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .patrol-feature i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .patrol-feature h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .patrol-feature p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .patrol-cta {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .btn-patrol {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition-normal);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-patrol:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-traffic-light"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>ЦОДД</h1>
+                    <span>Смоленской области</span>
+                </div>
+            </div>
+            
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="index.html" class="nav-link active" data-page="home">
+                        <i class="fas fa-home"></i>
+                        <span>Главная</span>
+                    </a></li>
+                    <li><a href="statistics.html" class="nav-link" data-page="stats">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Статистика</span>
+                    </a></li>
+                    <li><a href="map.html" class="nav-link" data-page="map">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Карта ДТП</span>
+                    </a></li>
+                    <li><a href="services.html" class="nav-link" data-page="services">
+                        <i class="fas fa-concierge-bell"></i>
+                        <span>Услуги</span>
+                    </a></li>
+                    <!-- Новая вкладка Дорожный патруль -->
+                    <li><a href="car.html" class="nav-link" data-page="patrol">
+                        <i class="fas fa-car-side"></i>
+                        <span>Дорожный патруль</span>
+                    </a></li>
+                    <li><a href="contacts.html" class="nav-link" data-page="contacts">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>Контакты</span>
+                    </a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="mobile-menu-btn" id="mobileMenuBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Герой-секция -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="title-main">Безопасность дорожного движения</span>
+                        <span class="title-sub">Смоленской области</span>
+                    </h1>
+                    <p class="hero-description">Официальные данные и аналитика дорожно-транспортных происшествий в реальном времени</p>
+                    
+                    <div class="hero-actions">
+                        <a href="#live-stats" class="btn btn-primary">
+                            <i class="fas fa-chart-line"></i>
+                            Смотреть статистику
+                        </a>
+                        <a href="map.html" class="btn btn-secondary">
+                            <i class="fas fa-map"></i>
+                            Открыть карту ДТП
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="hero-visual">
+                    <div class="stats-preview">
+                        <div class="stat-badge">
+                            <div class="stat-icon">
+                                <i class="fas fa-car-crash"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="previewAccidents">247</span>
+                                <span class="stat-label">ДТП за 2024 год</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-badge">
+                            <div class="stat-icon">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="previewDecrease">82%</span>
+                                <span class="stat-label">Снижение аварийности</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Новая секция Дорожного патруля -->
+    <section id="road-patrol" class="patrol-section">
+        <div class="container">
+            <div class="patrol-highlight">
+                <h2>Дорожный патруль Смоленской области</h2>
+                <p>Современные патрульные автомобили для обеспечения безопасности дорожного движения. Организация, контроль и управление дорожным движением в реальном времени.</p>
+                
+                <div class="patrol-features">
+                    <div class="patrol-feature">
+                        <i class="fas fa-video"></i>
+                        <h3>Видеонаблюдение</h3>
+                        <p>Системы круглосуточного видеомониторинга дорожной ситуации</p>
+                    </div>
+                    <div class="patrol-feature">
+                        <i class="fas fa-radar"></i>
+                        <h3>Автоматический контроль</h3>
+                        <p>Радарные системы фиксации нарушений ПДД</p>
+                    </div>
+                    <div class="patrol-feature">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>GPS-мониторинг</h3>
+                        <p>Точное отслеживание местоположения патрулей</p>
+                    </div>
+                    <div class="patrol-feature">
+                        <i class="fas fa-broadcast-tower"></i>
+                        <h3>Онлайн-связь</h3>
+                        <p>Непрерывная связь с центром управления</p>
+                    </div>
+                </div>
+
+                <div class="patrol-cta">
+                    <a href="car.html" class="btn-patrol">
+                        <i class="fas fa-car-side"></i>
+                        Подробнее о дорожном патруле
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Остальной код остается без изменений -->
+    <!-- Живая статистика -->
+    <section id="live-stats" class="live-stats">
+        <div class="container">
+            <div class="section-header">
+                <h2>Живая статистика ДТП</h2>
+                <p>Актуальные данные по дорожно-транспортным происшествиям в Смоленской области</p>
+            </div>
+
+            <div class="stats-grid">
+                <!-- Основные показатели -->
+                <div class="stat-card primary">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="fas fa-car-burst"></i>
+                        </div>
+                        <div class="stat-title">
+                            <h3>Дорожно-транспортные происшествия</h3>
+                            <span>2024 год</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-main">
+                        <div class="stat-value" id="totalAccidents">0</div>
+                        <div class="stat-comparison">
+                            <span class="trend negative" id="accidentsTrend">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>+0% к прошлому году</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="stat-details">
+                        <div class="detail-item">
+                            <span class="detail-label">С погибшими</span>
+                            <span class="detail-value" id="fatalAccidents">0</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">С пострадавшими</span>
+                            <span class="detail-value" id="injuredAccidents">0</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Материальный ущерб</span>
+                            <span class="detail-value" id="damageCost">0 млн ₽</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Нарушения ПДД -->
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="fas fa-traffic-light"></i>
+                        </div>
+                        <div class="stat-title">
+                            <h3>Нарушения ПДД</h3>
+                            <span>Зафиксировано камерами</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-main">
+                        <div class="stat-value" id="totalViolations">0</div>
+                        <div class="stat-comparison">
+                            <span class="trend positive" id="violationsTrend">
+                                <i class="fas fa-arrow-down"></i>
+                                <span>-0% к прошлому году</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="stat-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Превышение скорости</span>
+                            <span class="detail-value" id="speedViolations">0</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Проезд на красный</span>
+                            <span class="detail-value" id="redLightViolations">0</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Парковка</span>
+                            <span class="detail-value" id="parkingViolations">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Эффективность мер -->
+                <div class="stat-card accent">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="stat-title">
+                            <h3>Эффективность мер</h3>
+                            <span>Результаты работы ЦОДД</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-main">
+                        <div class="stat-value" id="safetyImprovement">0%</div>
+                        <div class="stat-comparison">
+                            <span class="trend positive">Улучшение безопасности</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Спасено жизней</span>
+                            <span class="detail-value" id="savedLives">0</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Предотвращено ДТП</span>
+                            <span class="detail-value" id="preventedAccidents">0</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Новые камеры</span>
+                            <span class="detail-value" id="newCameras">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Графики в реальном времени -->
+            <div class="charts-section">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h4>Динамика ДТП по месяцам 2024</h4>
+                        <div class="chart-legend">
+                            <span class="legend-item current">2024 год</span>
+                            <span class="legend-item previous">2023 год</span>
+                        </div>
+                    </div>
+                    <div class="chart" id="accidentsChart">
+                        <canvas id="accidentsChartCanvas"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h4>Распределение ДТП по типам</h4>
+                    </div>
+                    <div class="chart" id="typesChart">
+                        <canvas id="typesChartCanvas"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Интерактивная карта -->
+    <section class="interactive-map">
+        <div class="container">
+            <div class="section-header">
+                <h2>Интерактивная карта аварийности</h2>
+                <p>Тепловая карта дорожно-транспортных происшествий в Смоленской области</p>
+            </div>
+
+            <div class="map-controls">
+                <div class="control-group">
+                    <label>Период:</label>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-period="week">Неделя</button>
+                        <button class="filter-btn" data-period="month">Месяц</button>
+                        <button class="filter-btn" data-period="quarter">Квартал</button>
+                        <button class="filter-btn" data-period="year">Год</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Тип ДТП:</label>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-type="all">Все ДТП</button>
+                        <button class="filter-btn" data-type="fatal">С погибшими</button>
+                        <button class="filter-btn" data-type="injured">С пострадавшими</button>
+                        <button class="filter-btn" data-type="property">Материальный ущерб</button>
+                    </div>
+                </div>
+
+                <button class="btn-refresh" id="refreshMapData">
+                    <i class="fas fa-sync-alt"></i>
+                    Обновить данные
+                </button>
+            </div>
+
+            <div class="map-wrapper">
+                <div class="map-container">
+                    <div id="heatMap" class="heat-map">
+                        <div class="map-overlay">
+                            <div class="map-legend">
+                                <h5>Интенсивность ДТП</h5>
+                                <div class="legend-scale">
+                                    <span class="scale-min">Низкая</span>
+                                    <div class="scale-gradient"></div>
+                                    <span class="scale-max">Высокая</span>
+                                </div>
+                            </div>
+                            <div class="map-tooltip" id="mapTooltip"></div>
+                        </div>
+                    </div>
+
+                    <div class="map-sidebar">
+                        <div class="sidebar-section">
+                            <h4>Районы Смоленской области</h4>
+                            <div class="districts-list" id="districtsList">
+                                <!-- Список районов будет заполнен через JS -->
+                            </div>
+                        </div>
+
+                        <div class="sidebar-section">
+                            <h4>Топ-5 аварийных участков</h4>
+                            <div class="top-accidents" id="topAccidents">
+                                <!-- Список аварийных участков -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Быстрый доступ -->
+    <section class="quick-access">
+        <div class="container">
+            <div class="section-header">
+                <h2>Быстрый доступ к сервисам</h2>
+                <p>Все необходимые инструменты для работы с дорожной статистикой</p>
+            </div>
+
+            <div class="services-grid">
+                <a href="statistics.html" class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3>Детальная статистика</h3>
+                    <p>Полные отчеты и аналитика по ДТП и нарушениям ПДД</p>
+                    <span class="service-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
+                </a>
+
+                <a href="map.html" class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-map"></i>
+                    </div>
+                    <h3>Интерактивная карта</h3>
+                    <p>Визуализация аварийности по районам и участкам дорог</p>
+                    <span class="service-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
+                </a>
+
+                <a href="car.html" class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-car-side"></i>
+                    </div>
+                    <h3>Дорожный патруль</h3>
+                    <p>Информация о патрульных автомобилях и их оснащении</p>
+                    <span class="service-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
+                </a>
+
+                <a href="#" class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-file-download"></i>
+                    </div>
+                    <h3>Экспорт данных</h3>
+                    <p>Скачивание отчетов в PDF, Excel и других форматах</p>
+                    <span class="service-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-traffic-light"></i>
+                        <div>
+                            <h3>ЦОДД Смоленской области</h3>
+                            <p>Официальный портал дорожной безопасности</p>
+                        </div>
+                    </div>
+                    <p class="footer-description">
+                        Система мониторинга и анализа дорожно-транспортных происшествий. 
+                        Данные обновляются в реальном времени.
+                    </p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Навигация</h4>
+                    <nav class="footer-nav">
+                        <a href="index.html">Главная</a>
+                        <a href="statistics.html">Статистика</a>
+                        <a href="map.html">Карта ДТП</a>
+                        <a href="services.html">Услуги</a>
+                        <a href="car.html">Дорожный патруль</a>
+                        <a href="contacts.html">Контакты</a>
+                    </nav>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Контакты</h4>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>г. Смоленск, ул. Примерная, 123</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+7 (4812) 12-34-56</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@codd-smolensk.ru</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Подписка на обновления</h4>
+                    <div class="newsletter">
+                        <input type="email" placeholder="Ваш email" class="newsletter-input">
+                        <button class="newsletter-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-vk"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 ЦОДД Смоленской области. Все права защищены.</p>
+                <div class="footer-links">
+                    <a href="#">Политика конфиденциальности</a>
+                    <a href="#">Пользовательское соглашение</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Подключение библиотек -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/app.js" defer></script>
+</body>
+</html>
